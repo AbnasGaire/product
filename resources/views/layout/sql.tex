@@ -1,0 +1,47 @@
+
+// SELECT NAME, pin.quantityin,pout.quantityout,SUM(pin.quantityin) AS totalquantyin FROM products
+// right join productin as pin
+// ON products.id = pin.product_id
+// left JOIN productout AS pout
+// ON products.id =pout.product_id
+// GROUP BY pin.quantityin;
+
+
+
+// SELECT pin.product_id ,pin.quantityin FROM productin AS pin
+// UNION
+// SELECT pout.product_id ,(0-pout.quantityout) FROM	productout AS pout;
+
+
+
+// SELECT product_id,SUM(quantityin) 
+// FROM productin
+// GROUP BY product_id;
+
+
+// ( SELECT product_id,SUM(quantityin) 
+//  FROM productin
+//  GROUP BY product_id);
+
+
+// (SELECT product_id,SUM(quantityout)
+// FROM productout
+// GROUP BY product_id);
+
+ SELECT SUM(pin.quantityin) FROM (
+ SELECT pin.product_id ,pin.quantityin FROM productin AS pin
+ UNION
+ SELECT pout.product_id ,(0-pout.quantityout) FROM	productout AS pout)
+ GROUP BY pin.quantityin;
+
+
+
+ SELECT products.name,product_id,SUM(total) AS total FROM(
+SELECT product_id ,SUM(quantityin) AS total FROM productin 
+GROUP BY product_id
+UNION 
+SELECT product_id ,SUM(0-quantityout) AS total FROM	productout 
+GROUP BY product_id) AS abc
+JOIN products
+ON products.id=abc.product_id
+GROUP BY product_id;
